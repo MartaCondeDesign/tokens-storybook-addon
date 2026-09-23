@@ -1,10 +1,10 @@
 import React from 'react';
 import { AddonPanel } from 'storybook/internal/components';
 import { addons, types, useStorybookApi } from '@storybook/manager-api';
-import { HELIX_HIGHLIGHT_EVENT, resolveConfig } from './constants.js';
+import { TOKENS_HIGHLIGHT_EVENT, resolveConfig } from './constants.js';
 
-const ADDON_ID = 'helix-ds/storybook-addon-tokens';
-const PANEL_ID = 'helix-ds/storybook-addon-tokens/panel';
+const ADDON_ID = 'tokens-storybook-addon';
+const PANEL_ID = 'tokens-storybook-addon/panel';
 
 const CATEGORY_ORDER = ['color', 'typography', 'spacing', 'radius', 'sizing', 'shadows'];
 
@@ -20,14 +20,14 @@ const CATEGORY_LABELS = {
 // Panel-local UI accent — deliberately NOT the lilac used to highlight the live
 // component in the canvas. The panel's own tabs/row-hover stay on the ordinary
 // focus color so lilac reads as one unambiguous signal: "this is on the component".
-const PANEL_ACCENT = 'var(--helix-color-border-focus, #3b82f6)';
-const PANEL_ACCENT_SOFT = 'color-mix(in srgb, var(--helix-color-border-focus, #3b82f6) 14%, transparent)';
+const PANEL_ACCENT = 'var(--tokens-addon-border-focus, #3b82f6)';
+const PANEL_ACCENT_SOFT = 'color-mix(in srgb, var(--tokens-addon-border-focus, #3b82f6) 14%, transparent)';
 
 const TABLE_STYLE = {
   width: '100%',
   borderCollapse: 'collapse',
   marginTop: 16,
-  border: '1px solid var(--helix-color-border-neutral, #e2e8f0)',
+  border: '1px solid var(--tokens-addon-border-neutral, #e2e8f0)',
   borderRadius: 12,
   overflow: 'hidden',
   tableLayout: 'fixed',
@@ -40,21 +40,21 @@ const TH_STYLE = {
   fontWeight: 600,
   letterSpacing: '0.04em',
   textTransform: 'uppercase',
-  color: 'var(--helix-color-text-neutral-lightest, #64748b)',
-  borderBottom: '1px solid var(--helix-color-border-neutral, #e2e8f0)',
-  borderRight: '1px solid var(--helix-color-border-neutral-light, #f1f5f9)',
+  color: 'var(--tokens-addon-text-muted, #64748b)',
+  borderBottom: '1px solid var(--tokens-addon-border-neutral, #e2e8f0)',
+  borderRight: '1px solid var(--tokens-addon-border-light, #f1f5f9)',
 };
 
 const TD_STYLE = {
   padding: '10px 12px',
   verticalAlign: 'top',
-  borderRight: '1px solid var(--helix-color-border-neutral-light, #f1f5f9)',
-  borderBottom: '1px solid var(--helix-color-border-neutral-light, #f1f5f9)',
+  borderRight: '1px solid var(--tokens-addon-border-light, #f1f5f9)',
+  borderBottom: '1px solid var(--tokens-addon-border-light, #f1f5f9)',
 };
 
 // The panel renders in the Storybook MANAGER's own document — a separate frame from the
 // preview iframe, which is the only place `.storybook/preview.ts` actually imports the
-// tokens CSS. `var(--helix-table-header-color)` written directly in this file's own inline
+// tokens CSS written directly in this file's own inline
 // styles therefore never resolves to anything (the manager never defines that custom
 // property) — every color swatch silently renders as transparent/blank regardless of which
 // component's tokens are showing. Read the REAL resolved value out of the preview iframe's
@@ -83,14 +83,14 @@ function resolvePreviewColor(token) {
 // though the doc.ts token list includes it as part of Card's full surface. Reads the preview
 // iframe's live DOM (same cross-frame approach as resolvePreviewColor) rather than trying to
 // infer presence from args, since "does this part exist" is exactly what the DOM already knows.
-function getPresentParts() {
+function getPresentParts(config) {
   if (typeof document === 'undefined') return null;
   const iframe = document.getElementById('storybook-preview-iframe');
   const doc = iframe?.contentDocument;
   if (!doc) return null;
   try {
     const present = new Set();
-    doc.querySelectorAll('[data-helix-part]').forEach(el => present.add(el.getAttribute('data-helix-part')));
+    doc.querySelectorAll(`[${config.dataAttribute}]`).forEach(el => present.add(el.getAttribute(config.dataAttribute)));
     return present;
   } catch {
     // Cross-frame access can throw before the preview has finished its first paint.
@@ -118,7 +118,7 @@ function getCategory(item) {
 
 // Must be unique per row, not just per token — two rows can legitimately share the exact
 // same part+token (e.g. Textarea's padding.top/bottom/start/end are all the literal same
-// --helix-primitive-spacing-75, since the field has uniform padding on every side). Using
+// the same spacing token, since the field has uniform padding on every side). Using
 // only part+token here previously collided those rows onto one key, so hovering any one of
 // them lit up all four at once (React `key` reuse + a single `hoveredRow` string matching
 // every row with that colliding key). `label` (plus state/size/variant, when set) is what
@@ -155,10 +155,7 @@ function TokensPanel({ active }) {
   // default (e.g. Button's `size = 'm'`) lives in `initialArgs` instead. Merge both so
   // filtering narrows to the real default even before anyone touches a control.
   const currentArgs = { ...currentStory?.initialArgs, ...currentStory?.args };
-  const tokens = currentStory?.parameters?.helixTokens ?? [];
-  // Lets a consuming project outside Helix point this addon at its own DOM/highlight
-  // convention via `parameters.helixTokensConfig`, without forking the addon — see
-  // constants.js. Defaults reproduce Helix's own current behavior exactly.
+  const tokens = currentStory?.parameters?.tokens ?? [];
   const config = resolveConfig(currentStory?.parameters);
   const [category, setCategory] = React.useState('color');
   const [hoveredRow, setHoveredRow] = React.useState(null);
@@ -177,21 +174,21 @@ function TokensPanel({ active }) {
     return () => cancelAnimationFrame(raf1);
     // Re-check shortly after story navigation AND after any arg change (e.g. toggling a
     // control that conditionally renders a part, like Card's `header`) — both can change
-    // which `data-helix-part` elements actually exist in the preview DOM.
+    // which configured part elements actually exist in the preview DOM.
   }, [currentStory?.id, JSON.stringify(currentArgs)]);
 
-  const presentParts = React.useMemo(() => getPresentParts(), [currentStory?.id, JSON.stringify(currentArgs), paintTick]);
+  const presentParts = React.useMemo(() => getPresentParts(config), [config, currentStory?.id, JSON.stringify(currentArgs), paintTick]);
 
   // The preview iframe reloads its story on navigation — a highlight left over from a
   // hovered row in the previous story would otherwise point at DOM that no longer exists.
   React.useEffect(() => {
-    return () => channel.emit(HELIX_HIGHLIGHT_EVENT, null);
+    return () => channel.emit(TOKENS_HIGHLIGHT_EVENT, null);
   }, [channel, currentStory?.id]);
 
   function highlightComponent(item) {
     setHoveredRow(item ? rowKeyFor(item) : null);
     channel.emit(
-      HELIX_HIGHLIGHT_EVENT,
+      TOKENS_HIGHLIGHT_EVENT,
       item
         ? { part: item.part, variant: item.variant, category: getCategory(item), token: item.token, value: item.value, label: item.label, meta: item.meta, axis: item.axis, config }
         : null,
@@ -252,12 +249,12 @@ function TokensPanel({ active }) {
               type: 'button',
               onClick: () => setCategory(item),
               style: {
-                border: `1px solid ${category === item ? PANEL_ACCENT : 'var(--helix-color-border-neutral, #e2e8f0)'}`,
+                border: `1px solid ${category === item ? PANEL_ACCENT : 'var(--tokens-addon-border-neutral, #e2e8f0)'}`,
                 borderRadius: 999,
                 padding: '4px 9px',
                 fontSize: 11,
-                background: category === item ? PANEL_ACCENT_SOFT : 'var(--helix-color-fill-surface, #f8fafc)',
-                color: category === item ? PANEL_ACCENT : 'var(--helix-color-text-neutral, #0f172a)',
+                background: category === item ? PANEL_ACCENT_SOFT : 'var(--tokens-addon-fill-surface, #f8fafc)',
+                color: category === item ? PANEL_ACCENT : 'var(--tokens-addon-text-neutral, #0f172a)',
                 cursor: 'pointer',
                 font: 'inherit',
               },
@@ -277,7 +274,7 @@ function TokensPanel({ active }) {
                 'tr',
                 null,
                 React.createElement('th', { style: { ...TH_STYLE, width: showPreviewColumn ? '32%' : '38%' } }, 'Element'),
-                React.createElement('th', { style: { ...TH_STYLE, width: showPreviewColumn ? '48%' : undefined, borderRight: showPreviewColumn ? '1px solid var(--helix-color-border-neutral-light, #f1f5f9)' : 'none' } }, 'Token'),
+                React.createElement('th', { style: { ...TH_STYLE, width: showPreviewColumn ? '48%' : undefined, borderRight: showPreviewColumn ? '1px solid var(--tokens-addon-border-light, #f1f5f9)' : 'none' } }, 'Token'),
                 showPreviewColumn ? React.createElement('th', { style: { ...TH_STYLE, borderRight: 'none' } }, 'Preview') : null,
               ),
             ),
@@ -311,8 +308,8 @@ function TokensPanel({ active }) {
                             fontWeight: 600,
                             textTransform: 'uppercase',
                             letterSpacing: '0.03em',
-                            color: 'var(--helix-color-text-neutral-lightest, #64748b)',
-                            border: '1px solid var(--helix-color-border-neutral, #e2e8f0)',
+                            color: 'var(--tokens-addon-text-muted, #64748b)',
+                            border: '1px solid var(--tokens-addon-border-neutral, #e2e8f0)',
                             borderRadius: 4,
                             padding: '1px 5px',
                           },
@@ -323,12 +320,12 @@ function TokensPanel({ active }) {
                     'td',
                     { style: { ...TD_STYLE, borderRight: showPreviewColumn ? TD_STYLE.borderRight : 'none', overflow: 'hidden' } },
                     React.createElement('code', { style: { fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' } }, tokenText),
-                    item.meta ? React.createElement('span', { style: { display: 'block', marginTop: 2, fontSize: 11, color: 'var(--helix-color-text-neutral-lightest, #64748b)' } }, item.meta) : null,
+                    item.meta ? React.createElement('span', { style: { display: 'block', marginTop: 2, fontSize: 11, color: 'var(--tokens-addon-text-muted, #64748b)' } }, item.meta) : null,
                   ),
                   showPreviewColumn
                     ? React.createElement(
                         'td',
-                        { style: { padding: '10px 12px', verticalAlign: 'middle', borderBottom: '1px solid var(--helix-color-border-neutral-light, #f1f5f9)' } },
+                        { style: { padding: '10px 12px', verticalAlign: 'middle', borderBottom: '1px solid var(--tokens-addon-border-light, #f1f5f9)' } },
                         React.createElement('span', {
                           title: item.token ? `var(${item.token})` : item.value ?? '',
                           style: {
@@ -336,9 +333,9 @@ function TokensPanel({ active }) {
                             width: 28,
                             height: 28,
                             borderRadius: 8,
-                            border: '1px solid var(--helix-color-border-neutral, #e2e8f0)',
+                            border: '1px solid var(--tokens-addon-border-neutral, #e2e8f0)',
                             // resolvePreviewColor reads the REAL value from the preview iframe —
-                            // a bare var(--helix-*) written here never resolves (this panel's own
+                            // a bare token variable written here never resolves (this panel's own
                             // document doesn't define that custom property; see the function's
                             // own comment). Falls back to the unresolved var()/literal only if
                             // the iframe read fails, so the swatch degrades instead of crashing.
@@ -352,7 +349,7 @@ function TokensPanel({ active }) {
               }),
             ),
           )
-        : React.createElement('p', { style: { margin: '16px 0 0', color: 'var(--helix-color-text-neutral-light, #475569)' } }, 'No tokens defined for this category.'),
+        : React.createElement('p', { style: { margin: '16px 0 0', color: 'var(--tokens-addon-text-light, #475569)' } }, 'No tokens defined for this category.'),
     ),
   );
 }
@@ -362,7 +359,7 @@ addons.register(ADDON_ID, (api) => {
     id: PANEL_ID,
     type: types.PANEL,
     title: 'Tokens',
-    disabled: parameters => !parameters?.helixTokens?.length,
+    disabled: parameters => !parameters?.tokens?.length,
     render: ({ active }) => React.createElement(TokensPanel, { active }),
   });
 });

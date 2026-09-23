@@ -1,18 +1,18 @@
 {
-  "name": "@helix-ds/storybook-addon-tokens",
+  "name": "tokens-storybook-addon",
   "version": "0.1.0",
   "private": false,
-  "description": "Helix Storybook addon that shows component token lists in the manager UI",
+  "description": "Storybook addon that shows component token lists in the manager UI",
   "keywords": ["storybook", "storybook-addon", "design-tokens", "design-system"],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MartaCondeDesign/helix-storybook-addon-tokens.git"
+    "url": "https://github.com/MartaCondeDesign/tokens-storybook-addon.git"
   },
   "bugs": {
-    "url": "https://github.com/MartaCondeDesign/helix-storybook-addon-tokens/issues"
+    "url": "https://github.com/MartaCondeDesign/tokens-storybook-addon/issues"
   },
-  "homepage": "https://github.com/MartaCondeDesign/helix-storybook-addon-tokens#readme",
+  "homepage": "https://github.com/MartaCondeDesign/tokens-storybook-addon#readme",
   "engines": {
     "node": ">=20"
   },
@@ -28,7 +28,7 @@
     "./preview": "./preview.js",
     "./package.json": "./package.json"
   },
-  "files": ["manager.js", "register.js", "preview.js", "constants.js", "CONTRACT.md", "README.md"],
+  "files": ["manager.js", "register.js", "preview.js", "constants.js", "CONTRACT.md", "README.md", "assets"],
   "peerDependencies": {
     "react": ">=19.0.0",
     "storybook": "^8.6.18",
@@ -36,6 +36,6 @@
     "@storybook/preview-api": "^8.6.18"
   },
   "storybook": {
-    "displayName": "Helix Tokens"
+    "displayName": "Tokens"
   }
 }

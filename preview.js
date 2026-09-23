@@ -1,10 +1,10 @@
 import { addons } from '@storybook/preview-api';
-import { HELIX_HIGHLIGHT_EVENT, HELIX_HIGHLIGHT_COLOR, DEFAULT_CONFIG } from './constants.js';
+import { TOKENS_HIGHLIGHT_EVENT, TOKENS_HIGHLIGHT_COLOR, DEFAULT_CONFIG } from './constants.js';
 
-const OUTLINE_CLASS = 'helix-token-highlight';
-const RADIUS_CLASS = 'helix-token-highlight-radius';
-const STYLE_ID = 'helix-token-highlight-style';
-const OVERLAY_ID = 'helix-token-dimension-overlay';
+const OUTLINE_CLASS = 'tokens-addon-highlight';
+const RADIUS_CLASS = 'tokens-addon-highlight-radius';
+const STYLE_ID = 'tokens-addon-highlight-style';
+const OVERLAY_ID = 'tokens-addon-dimension-overlay';
 
 // Cleanup functions for whatever the current hover applied — run before every new
 // highlight and on clear, so nothing from a previous hover (or a previous story) lingers.
@@ -16,7 +16,7 @@ function ensureStyle() {
   style.id = STYLE_ID;
   style.textContent = `
     .${OUTLINE_CLASS} {
-      outline: 2px solid ${HELIX_HIGHLIGHT_COLOR} !important;
+      outline: 2px solid ${TOKENS_HIGHLIGHT_COLOR} !important;
       outline-offset: 2px !important;
       transition: outline-color 120ms ease;
     }
@@ -24,7 +24,7 @@ function ensureStyle() {
       /* Flush to the edge (no offset) so this traces the rendered corner curve itself —
          an inset offset reads as "there is padding/space here", which is a different
          token's job. Radius is only ever about the corners, never about spacing. */
-      outline: 3px solid ${HELIX_HIGHLIGHT_COLOR} !important;
+      outline: 3px solid ${TOKENS_HIGHLIGHT_COLOR} !important;
       outline-offset: 0 !important;
       transition: outline-color 120ms ease;
     }
@@ -73,14 +73,14 @@ function overrideInlineStyle(el, property, value, important) {
   });
 }
 
-// The injected .helix-token-highlight/-radius classes (ensureStyle, below) are static CSS
+  // The injected highlight classes (ensureStyle, below) are static CSS
 // authored once at module load using the DEFAULT highlight color — they can't read a
 // per-hover `config.highlightColor` override directly. When a payload configures a
 // different color, this nudges it in via an inline !important outline-color instead of
 // forking the stylesheet per call.
 function addClass(el, className, color) {
   el.classList.add(className);
-  const customColor = color && color !== HELIX_HIGHLIGHT_COLOR;
+  const customColor = color && color !== TOKENS_HIGHLIGHT_COLOR;
   if (customColor) el.style.setProperty('outline-color', color, 'important');
   cleanupFns.push(() => {
     el.classList.remove(className);
@@ -291,7 +291,7 @@ function applyHighlight(payload) {
   clearAll();
   const { part, variant, category, token, value, label } = payload;
   if (!part) return;
-  // Merge over DEFAULT_CONFIG (not just the payload) so a partial `helixTokensConfig`
+  // Merge over DEFAULT_CONFIG (not just the payload) so a partial `tokensAddon`
   // override (e.g. only `highlightColor` set) still gets the default dataAttribute/etc.
   const config = { ...DEFAULT_CONFIG, ...(payload.config ?? {}) };
   const targets = findTargets(part, variant, config);
@@ -338,7 +338,7 @@ function applyHighlight(payload) {
 
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   ensureStyle();
-  addons.getChannel().on(HELIX_HIGHLIGHT_EVENT, payload => {
+  addons.getChannel().on(TOKENS_HIGHLIGHT_EVENT, payload => {
     if (!payload) clearAll();
     else applyHighlight(payload);
   });

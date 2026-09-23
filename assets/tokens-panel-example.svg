@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Tokens panel highlighting a button background</title>
+  <desc id="desc">A Storybook-like window with a button highlighted in blue on the left and a Tokens panel showing the Background color row on the right.</desc>
+  <rect width="1200" height="680" fill="#f4f6f8"/>
+  <rect x="34" y="28" width="1132" height="624" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="34" y="28" width="1132" height="52" rx="12" fill="#17202b"/>
+  <circle cx="66" cy="54" r="7" fill="#f87171"/><circle cx="90" cy="54" r="7" fill="#fbbf24"/><circle cx="114" cy="54" r="7" fill="#4ade80"/>
+  <text x="150" y="60" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="18" font-weight="700">Storybook</text>
+  <rect x="34" y="80" width="690" height="572" fill="#f8fafc"/>
+  <text x="70" y="126" fill="#64748b" font-family="Arial, sans-serif" font-size="16">Preview / Button / Primary</text>
+  <rect x="226" y="260" width="306" height="112" rx="10" fill="#ffffff" stroke="#dbe3ec"/>
+  <rect x="282" y="293" width="194" height="48" rx="7" fill="#2563eb" stroke="#60a5fa" stroke-width="6"/>
+  <text x="341" y="324" fill="#ffffff" font-family="Arial, sans-serif" font-size="17" font-weight="700">Save changes</text>
+  <text x="70" y="585" fill="#64748b" font-family="Arial, sans-serif" font-size="15">Live preview element</text>
+  <rect x="724" y="80" width="442" height="572" fill="#ffffff" stroke="#e2e8f0"/>
+  <rect x="724" y="80" width="442" height="64" fill="#ffffff"/>
+  <text x="752" y="119" fill="#0f172a" font-family="Arial, sans-serif" font-size="22" font-weight="700">Tokens</text>
+  <rect x="748" y="164" width="394" height="42" rx="6" fill="#eff6ff" stroke="#2563eb"/>
+  <text x="768" y="191" fill="#1d4ed8" font-family="Arial, sans-serif" font-size="16" font-weight="700">Color</text>
+  <text x="854" y="191" fill="#64748b" font-family="Arial, sans-serif" font-size="16">Typography</text>
+  <text x="1016" y="191" fill="#64748b" font-family="Arial, sans-serif" font-size="16">Spacing</text>
+  <line x1="748" y1="232" x2="1142" y2="232" stroke="#e2e8f0" stroke-width="2"/>
+  <text x="768" y="264" fill="#64748b" font-family="Arial, sans-serif" font-size="13" font-weight="700">ELEMENT</text>
+  <text x="936" y="264" fill="#64748b" font-family="Arial, sans-serif" font-size="13" font-weight="700">TOKEN</text>
+  <rect x="748" y="282" width="394" height="76" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="768" y="313" fill="#0f172a" font-family="Arial, sans-serif" font-size="16" font-weight="700">Background</text>
+  <text x="936" y="313" fill="#334155" font-family="Arial, sans-serif" font-size="14">--color-action-primary</text>
+  <rect x="1080" y="329" width="38" height="16" rx="3" fill="#2563eb"/>
+  <text x="768" y="339" fill="#64748b" font-family="Arial, sans-serif" font-size="12">button / primary</text>
+  <path d="M 520 316 C 610 316, 650 316, 730 316" fill="none" stroke="#2563eb" stroke-width="3" stroke-dasharray="8 8"/>
+  <circle cx="520" cy="316" r="6" fill="#2563eb"/>
+  <text x="480" y="235" fill="#1d4ed8" font-family="Arial, sans-serif" font-size="15" font-weight="700">highlighted live element</text>
+</svg>
