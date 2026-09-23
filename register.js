@@ -190,7 +190,7 @@ function TokensPanel({ active }) {
     channel.emit(
       TOKENS_HIGHLIGHT_EVENT,
       item
-        ? { part: item.part, variant: item.variant, category: getCategory(item), token: item.token, value: item.value, label: item.label, meta: item.meta, axis: item.axis, config }
+        ? { part: item.part, variant: item.variant, category: getCategory(item), token: item.token, value: item.value, label: item.label, meta: item.meta, axis: item.axis, padding: item.padding, paddingSides: item.paddingSides, relationship: item.relationship, colorRole: item.colorRole, config }
         : null,
     );
   }

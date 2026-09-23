@@ -84,6 +84,11 @@ export const Primary = {
 Each item supports `part`, `label`, `token`, `value`, `kind`, `variant`, `size`,
 `state`, `axis`, and `meta`. See [CONTRACT.md](CONTRACT.md) for the complete contract.
 
+For color rows, add `colorRole: 'background' | 'text' | 'border' | 'icon' | 'asset'` so
+the panel explains which visual surface uses the color. For spacing, use `padding` or
+`paddingSides` for the exact padding zones, and `relationship` for gaps such as
+`icon-to-text` or `header-to-text`.
+
 `CONTRACT.md` is optional documentation, not a runtime dependency. The addon works
 without it as long as the story provides `parameters.tokens`, the component renders the
 configured DOM attribute, and the addon is registered in Storybook. Keep the contract when
@@ -158,6 +163,21 @@ pnpm pack --pack-destination /tmp/tokens-storybook-addon
 ```
 
 The package is intentionally small and has no runtime dependency on a token library.
+
+## Work with me
+
+I create design systems, component libraries, and AI-ready design tooling for freelance
+projects. For collaborations or consulting:
+
+- [Contact me through my website](https://martaconde.com)
+- [LinkedIn](https://www.linkedin.com/in/martacondedesign/)
+- [YouTube channel](https://www.youtube.com/@martacondedesign)
+
+## Free resources
+
+More free design-system and frontend resources are available at
+[martaconde.com](https://martaconde.com). Additional resources and downloads will be
+linked here as they are published.
 
 ## Author
 

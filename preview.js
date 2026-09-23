@@ -160,7 +160,36 @@ function findGapChildren(container, axis) {
   return rects;
 }
 
-function drawDimensionLine(el, px, axis, category, isGap, color) {
+function getPaddingSides(item) {
+  if (Array.isArray(item?.paddingSides) && item.paddingSides.length) return item.paddingSides;
+  if (typeof item?.padding === 'string') {
+    const sides = item.padding.split(/[-,\s]+/).filter(Boolean).map(side => side === 'start' ? 'left' : side === 'end' ? 'right' : side);
+    if (sides.includes('all')) return ['top', 'right', 'bottom', 'left'];
+    return sides.filter(side => ['top', 'right', 'bottom', 'left'].includes(side));
+  }
+  return [];
+}
+
+function drawPaddingOverlay(el, px, sides, color) {
+  const rect = el.getBoundingClientRect();
+  const amount = Math.max(parseFloat(px) || 0, 0);
+  if (!amount || !sides.length) return false;
+  const overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID;
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:2147483647;pointer-events:none;';
+  const fill = `${color}42`;
+  const edge = `${color}b3`;
+  const zones = [];
+  if (sides.includes('top')) zones.push(`left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${Math.min(amount, rect.height)}px;`);
+  if (sides.includes('right')) zones.push(`left:${Math.max(rect.right - amount, rect.left)}px;top:${rect.top}px;width:${Math.min(amount, rect.width)}px;height:${rect.height}px;`);
+  if (sides.includes('bottom')) zones.push(`left:${rect.left}px;top:${Math.max(rect.bottom - amount, rect.top)}px;width:${rect.width}px;height:${Math.min(amount, rect.height)}px;`);
+  if (sides.includes('left')) zones.push(`left:${rect.left}px;top:${rect.top}px;width:${Math.min(amount, rect.width)}px;height:${rect.height}px;`);
+  overlay.innerHTML = zones.map(style => `<div style="position:fixed;${style}background:${fill};box-sizing:border-box;border:2px solid ${edge};"></div>`).join('');
+  document.body.appendChild(overlay);
+  return true;
+}
+
+function drawDimensionLine(el, px, axis, category, isGap, color, paddingSides = []) {
   const rect = el.getBoundingClientRect();
   const overlay = document.createElement('div');
   overlay.id = OVERLAY_ID;
@@ -185,6 +214,8 @@ function drawDimensionLine(el, px, axis, category, isGap, color) {
   // width); `spacing` measures a gap/inset, so the line's length is the token's own
   // resolved px value instead, never the component's size.
   const isSizing = category === 'sizing';
+
+  if (category === 'spacing' && paddingSides.length && drawPaddingOverlay(el, px, paddingSides, color)) return;
 
   // A "gap.*" row measures the space between two SPECIFIC children (e.g. a switch track
   // and its label) — draw the line exactly in that space, not at the outer container's
@@ -331,7 +362,7 @@ function applyHighlight(payload) {
     const el = targets[0];
     const px = resolvePx(token, value);
     const isGap = typeof label === 'string' && label.startsWith('gap.');
-    if (px) drawDimensionLine(el, px, getAxis(payload), category, isGap, config.highlightColor);
+    if (px) drawDimensionLine(el, px, getAxis(payload), category, isGap, config.highlightColor, getPaddingSides(payload));
     return;
   }
 }

@@ -20,6 +20,10 @@ type TokenItem = {
   token?: string;
   value?: string;
   kind?: TokenKind;
+  colorRole?: 'background' | 'text' | 'border' | 'icon' | 'asset';
+  padding?: 'all' | 'top' | 'right' | 'bottom' | 'left' | string;
+  paddingSides?: Array<'top' | 'right' | 'bottom' | 'left'>;
+  relationship?: 'text-to-text' | 'header-to-text' | 'icon-to-text' | 'icon-to-header' | 'element-to-element' | 'element-to-text' | string;
   variant?: string;
   size?: string;
   state?: 'hover' | 'press' | 'disabled' | 'focus';
@@ -45,6 +49,16 @@ without a state control because they describe interactive states.
 Every distinct padding side and layout gap should have its own row. Set `axis` to the
 direction of the measured spacing. For sizing, the default axis is vertical; set
 `axis: 'horizontal'` only for a width measurement.
+
+Padding rows use `padding: 'all'` for the four sides, a single side such as `top`, or
+`paddingSides` for combinations such as `['top', 'right']`. The preview paints only those
+zones with a translucent lilac layer and shows the pixel value in the table. Spacing rows
+are relationships between named elements, such as `icon-to-text` or `header-to-text`,
+not padding on the container.
+
+Color rows must declare the surface they describe with `colorRole`: `background`, `text`,
+`border`, `icon`, or `asset`. For an asset, use the most specific DOM part for each
+recolorable layer when the illustration contains multiple colors.
 
 ## DOM contract
 
