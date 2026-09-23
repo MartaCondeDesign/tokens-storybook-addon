@@ -5,6 +5,14 @@
   "description": "Helix Storybook addon that shows component token lists in the manager UI",
   "keywords": ["storybook", "storybook-addon", "design-tokens", "design-system"],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MartaCondeDesign/helix-storybook-addon-tokens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MartaCondeDesign/helix-storybook-addon-tokens/issues"
+  },
+  "homepage": "https://github.com/MartaCondeDesign/helix-storybook-addon-tokens#readme",
   "engines": {
     "node": ">=20"
   },
