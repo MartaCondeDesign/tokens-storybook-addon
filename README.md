@@ -164,21 +164,12 @@ pnpm pack --pack-destination /tmp/tokens-storybook-addon
 
 The package is intentionally small and has no runtime dependency on a token library.
 
-## Work with me
+## Made by Marta Conde
 
 I create design systems, component libraries, and AI-ready design tooling for freelance
-projects. For collaborations or consulting:
+projects. For collaborations, consulting, or more resources:
 
-- [Contact me through my website](https://martaconde.com)
+- [Website and contact](https://martaconde.com/)
 - [LinkedIn](https://www.linkedin.com/in/martacondedesign/)
-- [YouTube channel](https://www.youtube.com/@martacondedesign)
-
-## Free resources
-
-More free design-system and frontend resources are available at
-[martaconde.com](https://martaconde.com). Additional resources and downloads will be
-linked here as they are published.
-
-## Author
-
-Built by [Marta Conde](https://martaconde.com) · [LinkedIn](https://www.linkedin.com/in/martacondedesign/)
+- [YouTube](https://www.youtube.com/@martacondedesign)
+- [Free resources](https://martaconde.com/)
