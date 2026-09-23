@@ -84,6 +84,11 @@ export const Primary = {
 Each item supports `part`, `label`, `token`, `value`, `kind`, `variant`, `size`,
 `state`, `axis`, and `meta`. See [CONTRACT.md](CONTRACT.md) for the complete contract.
 
+`CONTRACT.md` is optional documentation, not a runtime dependency. The addon works
+without it as long as the story provides `parameters.tokens`, the component renders the
+configured DOM attribute, and the addon is registered in Storybook. Keep the contract when
+you want a shared reference for humans, tests, or coding agents.
+
 The `part` must match the configured DOM attribute on the live element:
 
 ```tsx
@@ -92,22 +97,37 @@ The `part` must match the configured DOM attribute on the live element:
 </button>
 ```
 
-## Configure with Claude or Claude Code
+## Use with any LLM or coding agent
 
-Add a project instruction file at `.claude/CLAUDE.md` or include this instruction in
-your team's agent prompt:
+The addon does not depend on a specific AI provider. Copy the instruction below into
+the instruction file or system prompt used by your coding agent:
 
 ```md
-When adding or editing a Storybook story, document every visible design token in
-parameters.tokens. Use the component's exact data-token-part value. Use kind=color for
-colors, typography for text metrics, space for padding/margin/gap, radius for corners,
-shadow for elevation, and other for values that do not fit those groups. Add one row for
-each distinct side, gap, state, variant, or size that is actually rendered. Use value for
-literal CSS values and token for CSS custom properties. Do not invent token rows for CSS
-properties the component does not consume.
+When adding or editing a Storybook component, document every visible design token in
+parameters.tokens. Inspect the rendered markup and CSS first. Use the exact data-token-part
+value from the DOM. Use kind=color for colors, typography for text metrics, space for
+padding/margin/gap, radius for corners, shadow for elevation, and other for values that do
+not fit those groups. Add one row for each distinct padding side, spacing relationship,
+state, variant, or size actually rendered. Use value for literal CSS values and token for
+CSS custom properties. Do not invent rows for CSS properties the component does not
+consume. After editing, run Storybook and verify that hovering each row highlights the
+correct live element.
 ```
 
-For a new component, ask Claude to inspect the component markup and CSS first, then to:
+### Where to install the instruction
+
+| Tool or workflow | Recommended location |
+| --- | --- |
+| Claude Code | `.claude/CLAUDE.md` |
+| ChatGPT, Copilot, or another IDE agent | Project instructions, workspace rules, or the agent's system prompt |
+| Cursor | `.cursor/rules/tokens-storybook-addon.mdc` |
+| Generic repository agents | `AGENTS.md` or `CONTRIBUTING.md` |
+| Documentation-aware agents | `llms.txt` or the project's AI documentation index |
+
+The same text works in all of these locations. Only the filename and frontmatter format
+change between tools.
+
+For a new component, ask the agent to:
 
 1. Add the `data-token-part` attributes to the exact DOM elements that own each value.
 2. Add `parameters.tokens` to the component stories.
@@ -138,3 +158,7 @@ pnpm pack --pack-destination /tmp/tokens-storybook-addon
 ```
 
 The package is intentionally small and has no runtime dependency on a token library.
+
+## Author
+
+Built by [Marta Conde](https://martaconde.com) · [LinkedIn](https://www.linkedin.com/in/martacondedesign/)

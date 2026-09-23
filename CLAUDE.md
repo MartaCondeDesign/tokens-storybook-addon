@@ -1,7 +1,7 @@
 # Contribution Instructions
 
 This repository is an isolated Storybook addon. Keep it independent from any specific
-design system, token package, CSS framework, or component library.
+design system, token package, CSS framework, component library, or AI provider.
 
 When changing the addon:
 
