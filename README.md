@@ -90,6 +90,10 @@ the panel explains which visual surface uses the color. For spacing, use `paddin
 `paddingSides` for the exact padding zones, and `relationship` for gaps such as
 `icon-to-text` or `header-to-text`.
 
+Labels identify one element only. If the same label is used twice, the addon adds a
+part-based suffix automatically, such as `text-header`, `text-description`,
+`text-caption`, or `padding-card-body`.
+
 `CONTRACT.md` is optional documentation, not a runtime dependency. The addon works
 without it as long as the story provides `parameters.tokens`, the component renders the
 configured DOM attribute, and the addon is registered in Storybook. Keep the contract when
