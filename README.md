@@ -177,4 +177,4 @@ projects. For collaborations, consulting, or more resources:
 - [Website and contact](https://martaconde.com/)
 - [LinkedIn](https://www.linkedin.com/in/martacondedesign/)
 - [YouTube](https://www.youtube.com/@martacondedesign)
-- [Free resources](https://martaconde.com/)
+- [Free resources](https://martacondedesign.gumroad.com/)
