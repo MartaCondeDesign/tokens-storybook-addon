@@ -5,7 +5,8 @@ from the active story and highlights the matching live element in the preview ca
 It is framework-agnostic and does not require a particular token package, CSS framework,
 or design system.
 
-![Storybook Tokens panel highlighting a component spacing token](assets/storybook-tokens-panel.png)
+![Storybook Tokens panel highlighting a component spacing token] <img width="1051" height="720" alt="Captura de pantalla 2026-09-23 a las 17 29 07" src="https://github.com/user-attachments/assets/2055a91b-d68e-4955-bd8f-b195ea375965" />
+
 
 The example shows the intended interaction: hovering a `color` row in the Tokens panel
 highlights the exact live button element whose background token is being inspected.
